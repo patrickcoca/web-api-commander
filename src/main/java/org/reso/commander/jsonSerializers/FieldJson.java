@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.olingo.commons.api.edm.EdmAnnotation;
 import org.apache.olingo.commons.api.edm.EdmElement;
+import org.apache.olingo.commons.api.edm.EdmEnumType;
 import org.apache.olingo.commons.api.edm.EdmNavigationProperty;
 import org.apache.olingo.commons.api.edm.EdmProperty;
 import org.reso.commander.common.ODataUtils;
@@ -175,6 +176,14 @@ public final class FieldJson implements JsonSerializer<FieldJson> {
         field.addProperty(TYPE_KEY, typeName);
         if (!typeName.startsWith("Edm.")) {
           field.addProperty(TYPE_NAME_KEY, src.edmElement.getType().getName());
+
+          // Add isFlags if this is an isFlags enum type
+          if (src.edmElement.getType() instanceof EdmEnumType) {
+              EdmEnumType enumType = (EdmEnumType) src.edmElement.getType();
+              if (enumType.isFlags()) { 
+                  field.addProperty("isFlags", true);
+              }
+          }
         }
       } catch (Exception ex) {
         LOG.error(getDefaultErrorMessage("Field Name:", src.edmElement.getName(), ex.toString()));

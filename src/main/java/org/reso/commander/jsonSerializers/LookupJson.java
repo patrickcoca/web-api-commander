@@ -78,6 +78,11 @@ public final class LookupJson implements JsonSerializer<LookupJson> {
     membersJsonObject.addProperty(LOOKUP_VALUE_KEY, src.memberName);
     membersJsonObject.addProperty(TYPE_KEY, src.edmEnumType.getUnderlyingType().getFullQualifiedName().getFullQualifiedNameAsString());
 
+    // Add isFlags if this is an isFlags enum type
+    if (src.edmEnumType.isFlags()) {
+      membersJsonObject.addProperty("isFlags", true);
+    }
+
     if (src.edmEnumType.getMember(memberName).getAnnotations().size() > 0) {
       JsonArray annotations = new JsonArray();
       src.edmEnumType.getMember(memberName).getAnnotations().forEach(edmAnnotation -> {
