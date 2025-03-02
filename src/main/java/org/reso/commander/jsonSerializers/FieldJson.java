@@ -177,9 +177,10 @@ public final class FieldJson implements JsonSerializer<FieldJson> {
         if (!typeName.startsWith("Edm.")) {
           field.addProperty(TYPE_NAME_KEY, src.edmElement.getType().getName());
 
-          // Add isFlags if this is an isFlags enum type
+          // Add isEnumType and isFlags if true
           if (src.edmElement.getType() instanceof EdmEnumType) {
               EdmEnumType enumType = (EdmEnumType) src.edmElement.getType();
+              field.addProperty("isEnumType", true);
               if (enumType.isFlags()) { 
                   field.addProperty("isFlags", true);
               }
